@@ -1,7 +1,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-constexpr int gapsize = 15;
+#include <cstdio>
 
+
+constexpr int gapsize = 15;
 void gaped_fullscreen(void){
 
   HWND currently_focusedwindow = GetForegroundWindow();
@@ -32,11 +34,18 @@ void gaped_fullscreen(void){
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nShowCmd) {
 	//TODO refactor the logic
-	while (true){
-		if ((GetKeyState(VK_LWIN) || GetKeyState(VK_RWIN)) && GetKeyState('G')){
+	if (!RegisterHotKey(nullptr, 1, MOD_WIN, 'Y')) {
+
+		printf("charan");
+		return -1;
+	}
+	MSG msg;
+	while (GetMessage(&msg, nullptr, 0, 0) > 0){
+		if (msg.message == WM_HOTKEY and msg.wParam == 1 ){
 			gaped_fullscreen();
 		}
 	}
+	UnregisterHotKey(nullptr, 1);
 
   return 0;
 }
